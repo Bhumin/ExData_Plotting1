@@ -1,0 +1,7 @@
+rm(list = ls())
+library(sqldf)
+DF <- read.csv.sql("household_power_consumption.txt", sql = 'select * from file where date = "1/2/2007" or date = "2/2/2007"', header = TRUE, sep = ";")
+png(file="plot1.png")
+gapHist <- hist(DF$Global_active_power, plot = FALSE)
+plot(gapHist, col = "Red", xlab ="Global Active Power (kilowatts)", main = "Global Active Power")
+dev.off()

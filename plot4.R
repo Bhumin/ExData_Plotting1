@@ -1,0 +1,18 @@
+rm(list = ls())
+library(sqldf)
+DF <- read.csv.sql("household_power_consumption.txt", sql = 'select * from file where date = "1/2/2007" or date = "2/2/2007"', header = TRUE, sep = ";")
+png(file="plot4.png")
+DF$Combined <- paste(DF$Date, DF$Time)
+DF$CombinedFormated <- strptime(DF$Combined, format = "%d/%m/%Y %H:%M:%S")
+par(mfrow = c(2,2), mar=c(4,4,2,1), oma=c(0,0,2,0))
+with(DF, 
+     {
+             plot(DF$CombinedFormated, DF$Global_active_power, xlab = "", ylab ="Global Active Power", type = "l")
+             plot(DF$CombinedFormated, DF$Voltage, xlab = "datetime", ylab ="Voltage", type = "l")
+             plot(DF$CombinedFormated, DF$Sub_metering_1, xlab = "", ylab ="Energy sub metering", type = "l", col="black")
+             lines(DF$CombinedFormated, DF$Sub_metering_2, col="red")
+             lines(DF$CombinedFormated, DF$Sub_metering_3, col="blue")
+             legend("topright", col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), pch = "-", bty = "n") 
+             plot(DF$CombinedFormated, DF$Global_reactive_power, xlab = "datetime", ylab ="Global_ractive_power", type = "l")                    
+     })
+dev.off()
